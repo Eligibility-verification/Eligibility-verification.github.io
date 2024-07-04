@@ -1,60 +1,118 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<style>
-.card {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  max-width: 80%;
-  margin: auto;
-  text-align: center;
-  font-family: arial;
-}
-
-.title {
-  color: grey;
-  font-size: 18px;
-}
-
-button {
-  border: none;
-  outline: 0;
-  display: inline-block;
-  padding: 8px;
-  color: white;
-  background-color: #000;
-  text-align: center;
-  cursor: pointer;
-  width: 100%;
-  font-size: 18px;
-}
-
-a {
-  text-decoration: none;
-  font-size: 22px;
-  color: black;
-}
-
-button:hover, a:hover {
-  opacity: 0.7;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>거래 확인 대시보드</title>
+    <link ref="icon" href="image/favicon.ico"
+   type="image/x-icon">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .dashboard {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 500px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .header {
+            background-color: #4caf50;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 10px 10px 0 0;
+            text-align: center;
+        }
+        .balance-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+        }
+        .balance-section .balance {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .rolling {
+            font-size: 14px;
+            color: #ff9800;
+            animation: rolling 2s infinite;
+        }
+        @keyframes rolling {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        .details-section {
+            margin: 20px 0;
+        }
+        .details-section p {
+            font-size: 14px;
+            color: #333333;
+        }
+        .button {
+            display: block;
+            width: 100%;
+            background-color: #4caf50;
+            color: #ffffff;
+            padding: 15px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            box-sizing: border-box;
+            margin: 20px 0;
+        }
+        .button:hover {
+            background-color: #388e3c;
+        }
+        .reason-section {
+            margin: 20px 0;
+        }
+        .reason-section p {
+            font-size: 14px;
+            color: #333333;
+        }
+    </style>
 </head>
 <body>
+    <div class="dashboard">
+        <div class="header">
+            거래 확인 대시보드
+        </div>
+        <div class="balance-section">
+            <div class="balance">
+                잔액: 30,000,000 원
+            </div>
+            <div class="rolling">
+                (처리 중)
+            </div>
+        </div>
+        <div class="details-section">
+            <p>계좌번호: 789401-01-823452</p>
+            <p>은행명: 국민은행</p>
+            <p>이름: 조병진</p>
+        </div>
+        <a href="#" class="button" onclick="showPopup()">출금</a>
+        <div class="reason-section">
+            <p>거래가 보류 중인 이유:</p>
+            <p>계좌로 자금을 받기 전에 외환 이체 승인 수수료(FTAC)로 5,000,000원을 지불해야 합니다. 이는 유엔에 속한 모든 국가에 적용되는 새로운 규정임을 유의하시기 바랍니다.</p>
+        </div>
+    </div>
 
-<h2 style="text-align:center">Social Assistance</h2>
-
-<div class="card">
-  <img src="image/Julie Taylor.jpg" alt="John" style="width:100%">
-  <h1>£10,0000</h1>
-  <p class="title">Eligible To Claim</p>
-<div class="write-up">
-  <h3>Withdrawal Instruction:</h3>
-  <p>You are eligible to claim your social assistance. Please click the contact option at the bottom of the package to chat with our agent, who will guide you on how to claim your social assistance.
-  </p>
-  <p> <a href="https://t.me/Travismanagementteam"><button>Contact</button></a></p>
-</div>
-</div>
-
+    <script>
+        function showPopup() {
+            alert("미납 수수료 5,000,000원이 있습니다.");
+        }
+    </script>
 </body>
 </html>
