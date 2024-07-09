@@ -166,11 +166,11 @@
 
                 localStorage.setItem('countdownTime', countdownTime); // Save countdown time to localStorage
 
-                countdownTime--;
-
                 if (countdownTime <= 0) {
                     clearInterval(interval);
                     countdownElement.textContent = "시간이 만료되었습니다.";
+                } else {
+                    countdownTime--;
                 }
 
                 // Make the balance blink red
