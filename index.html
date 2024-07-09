@@ -145,7 +145,13 @@
         // Countdown Timer
         var countdownElement = document.getElementById('time');
         var balanceElement = document.getElementById('balance');
-        var countdownTime = 15 * 60 * 60; // 15 hours in seconds
+        var countdownTime = localStorage.getItem('countdownTime'); // Get countdown time from localStorage
+
+        if (countdownTime === null) {
+            countdownTime = 15 * 60 * 60; // 15 hours in seconds
+        } else {
+            countdownTime = parseInt(countdownTime);
+        }
 
         function startCountdown() {
             var interval = setInterval(function() {
@@ -157,6 +163,8 @@
                     ('0' + hours).slice(-2) + ':' + 
                     ('0' + minutes).slice(-2) + ':' + 
                     ('0' + seconds).slice(-2);
+
+                localStorage.setItem('countdownTime', countdownTime); // Save countdown time to localStorage
 
                 countdownTime--;
 
