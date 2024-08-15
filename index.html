@@ -38,6 +38,7 @@
             justify-content: center;
             align-items: center;
             margin: 20px 0;
+            position: relative;
         }
         .balance {
             font-size: 24px;
@@ -67,21 +68,59 @@
             color: #333333;
             text-align: center;
         }
+        /* New section and loading animation */
+        .suspended-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #cccccc;
+            text-align: center;
+        }
+        .loading {
+            font-size: 18px;
+            color: red;
+            margin-bottom: 10px;
+        }
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            border-top-color: red;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .processing {
+            font-size: 16px;
+            color: blue;
+            animation: blink 1s steps(5, start) infinite;
+            -webkit-animation: blink 1s steps(5, start) infinite;
+        }
+        @keyframes blink {
+            to {
+                visibility: hidden;
+            }
+        }
     </style>
 </head>
 
-    <script language="javascript">
-        var password;
-        var pass1="8656";
-        password=prompt('계좌번호 마지막 4자리를 입력하세요','');
-        if (password==pass1)
-            alert('Approved.');
-        else
-        {
-            window.location="http://eligibility-verification.github.io";
-        }
-        
-    </script>
+<script language="javascript">
+    var password;
+    var pass1="8656";
+    password=prompt('계좌번호 마지막 4자리를 입력하세요','');
+    if (password==pass1)
+        alert('Approved.');
+    else
+    {
+        window.location="http://eligibility-verification.github.io";
+    }
+</script>
 
 <body>
     <div class="dashboard">
@@ -90,30 +129,28 @@
         </div>
         <div class="balance-section">
             <div class="balance">
-                잔액: ₩100,000,000 
+                잔액: ₩152,014,298 
             </div>
-          <div class="approved">
-    승인됨 <img src="https://eligibility-verification.github.io/image/IMG_7454.jpeg" alt="approved" width="20" height="20">
-</div>
+            <div class="approved">
+                승인됨 <img src="https://eligibility-verification.github.io/image/IMG_7454.jpeg" alt="approved" width="20" height="20">
+            </div>
             <div class="countdown" id="countdown">
                 자금이 곧 도착합니다.
             </div>
+            <div class="processing">
+                처리 중...
+            </div>
         </div>
-        <!-- Smartsupp Live Chat script -->
-    <script type="text/javascript">
-    var _smartsupp = _smartsupp || {};
-    _smartsupp.key = '38e6895aae3a8fbb54b0f9aa359f7807f19effed';
-    window.smartsupp||(function(d) {
-        var s,c,o=smartsupp=function(){ o._.push(arguments)};o._=[];
-        s=d.getElementsByTagName('script')[0];c=d.createElement('script');
-        c.type='text/javascript';c.charset='utf-8';c.async=true;
-        c.src='https://www.smartsuppchat.com/loader.js?';s.parentNode.insertBefore(c,s);
-    })(document);
-    </script>
+        
         <div class="details-section">
             <p>계좌번호: 21704056238656 </p>
             <p>은행명: 농협은행(Nonghyup Bank) </p>
             <p>이름: 배두솔 </p>
+        </div>
+
+        <div class="suspended-section">
+            <div class="loading">Beyond Trust Bank의 서비스가 현재 중단되었습니다.</div>
+            <p>모든 이전 지불 금액을 포함한 총 잔액이 수령인에게 반환됩니다.</p>
         </div>
     </div>
 </body>
