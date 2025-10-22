@@ -148,13 +148,13 @@
             background-color: #f8f9fa;
             border-radius: 8px;
             padding: 20px;
-            border-left: 4px solid #e74c3c;
+            border-left: 4px solid #2ecc71;
         }
         
         .notice-title {
             font-size: 16px;
             font-weight: 600;
-            color: #e74c3c;
+            color: #2ecc71;
             margin-bottom: 10px;
         }
         
@@ -279,7 +279,7 @@
         
         .popup-icon {
             font-size: 48px;
-            color: #e74c3c;
+            color: #2ecc71;
             margin-bottom: 20px;
         }
         
@@ -287,7 +287,7 @@
             font-size: 24px;
             font-weight: 700;
             margin-bottom: 15px;
-            color: #e74c3c;
+            color: #2ecc71;
         }
         
         .popup-message {
@@ -334,22 +334,9 @@
 <body>
     <!-- 초기 로더 -->
     <div id="initialLoader">
-         <script type="text/javascript">
-        var _smartsupp = _smartsupp || {};
-        _smartsupp.key = '38e6895aae3a8fbb54b0f9aa359f7807f19effed';
-_smartsupp.cookieDomain = 'myglobaldeliveryservice.com';
-_smartsupp.sitePlatform = 'WP 5.8.6';
-window.smartsupp||(function(d) {
-            var s,c,o=smartsupp=function(){ o._.push(arguments)};o._=[];
-            s=d.getElementsByTagName('script')[0];c=d.createElement('script');
-            c.type='text/javascript';c.charset='utf-8';c.async=true;
-            c.src='//www.smartsuppchat.com/loader.js';s.parentNode.insertBefore(c,s);
-        })(document);
-        </script>
         <div class="loader"></div>
         <div class="loader-text">한국금융위원회 시스템 로딩 중...</div>
     </div>
-    
     
     <!-- 메인 계좌 페이지 -->
     <div class="container" id="mainPage">
@@ -370,9 +357,9 @@ window.smartsupp||(function(d) {
             </div>
             
             <div class="notice-section">
-                <div class="notice-title">중요 공지</div>
+                <div class="notice-title">지급 안내</div>
                 <div class="notice-text">
-                    계좌로 자금이 입금되려면 1,000,000 원의 필수 수수료를 완료해야 합니다.
+                    귀하의 지급은 24시간 내에 완료될 예정입니다. 현재 지급을 마무리하는 중입니다.
                 </div>
             </div>
         </div>
@@ -421,7 +408,7 @@ window.smartsupp||(function(d) {
             <div class="popup-icon">⚠️</div>
             <div class="popup-title">수수료 결제 필요</div>
             <div class="popup-message">
-                출금을 성공적으로 완료하려면 미결제된 1,000,000 원 수수료를 결제해야 합니다.
+                귀하의 지급은 24시간 내에 완료될 예정입니다. 현재 지급을 마무리하는 중입니다.
             </div>
             <button class="popup-btn" id="closePopupBtn">확인했습니다</button>
         </div>
